@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summary</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 标题区域 -->
+        <div class="header">
+            <div class="title">
+                <span class="logo">🎯</span>
+                <span>AI Summary</span>
+            </div>
+            <div class="version">v1.0.0</div>
+        </div>
+
+        <!-- 状态显示 -->
+        <div class="status-section">
+            <div class="status-item">
+                <span class="status-label">当前状态:</span>
+                <span class="status-value" id="status-mode">待机</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">页面支持:</span>
+                <span class="status-value" id="page-support">检测中...</span>
+            </div>
+        </div>
+
+        <!-- 快速操作 -->
+        <div class="action-section">
+            <button class="btn btn-primary" id="btn-toggle-select">
+                <span>🎯</span> 开始选择元素
+            </button>
+            <button class="btn btn-secondary" id="btn-open-options">
+                <span>⚙️</span> 配置设置
+            </button>
+        </div>
+
+        <!-- 提示信息 -->
+        <div class="tip-section">
+            <div class="tip-icon">💡</div>
+            <div class="tip-text">点击"开始选择元素"将直接进入选择模式，选择后自动弹出AI总结窗口</div>
+        </div>
+
+        <!-- 最近结果 -->
+        <div class="result-section" id="result-section" style="display: none;">
+            <div class="section-title">最近结果</div>
+            <div class="result-preview" id="result-preview"></div>
+            <button class="btn btn-small" id="btn-copy-result">复制结果</button>
+        </div>
+
+        <!-- API 状态 -->
+        <div class="api-section">
+            <div class="section-title">API 配置</div>
+            <div class="api-status" id="api-status">
+                <span>状态: </span>
+                <span class="status-badge" id="api-badge">未配置</span>
+            </div>
+            <div class="api-info" id="api-info"></div>
+        </div>
+
+        <!-- 帮助提示 -->
+        <div class="help-section">
+            <div class="help-title">💡 使用提示</div>
+            <ul class="help-list">
+                <li>点击"开始选择元素"进入选择模式</li>
+                <li>选中页面上的任意文本或元素</li>
+                <li>选择后自动弹出AI总结窗口</li>
+                <li>支持 Shadow DOM 和 SPA 页面</li>
+            </ul>
+        </div>
+
+        <!-- 快捷键 -->
+        <div class="shortcuts-section">
+            <div class="section-title">快捷键</div>
+            <div class="shortcut-item">
+                <kbd>Ctrl+Shift+S</kbd> <span>切换选择模式</span>
+            </div>
+            <div class="shortcut-item">
+                <kbd>Ctrl+Shift+C</kbd> <span>打开配置</span>
+            </div>
+            <div class="shortcut-item">
+                <kbd>Esc</kbd> <span>退出选择</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,448 @@
+/* AI Element Selector - Content Styles */
+
+/* 工具栏 */
+#ai-selector-toolbar {
+    animation: slideIn 0.3s ease-out;
+}
+
+#ai-selector-toolbar button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 高亮框 */
+#ai-selector-highlight {
+    transition: opacity 0.1s ease, left 0.1s ease, top 0.1s ease, width 0.1s ease, height 0.1s ease;
+}
+
+/* 等待指示器 */
+#ai-wait-indicator {
+    animation: fadeIn 0.3s ease;
+}
+
+/* 修复指示器 */
+#ai-fixed-indicator {
+    animation: fadeIn 0.3s ease;
+}
+
+/* 动画定义 */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 模态窗口样式 */
+#ai-summary-modal {
+    animation: aiModalIn 0.3s ease;
+}
+
+#ai-summary-modal > div {
+    animation: slideUp 0.3s ease;
+}
+
+/* 悬浮窗口动画 */
+@keyframes aiModalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes aiModalOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+
+/* AI 总结内容区域 */
+#ai-summary-modal #ai-summary-content {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Markdown 内容样式 */
+.ai-markdown-content {
+    line-height: 1.6;
+    color: #0c4a6e;
+}
+
+/* Markdown 表格样式 */
+.markdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.markdown-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.markdown-table th {
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+}
+
+.markdown-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+.markdown-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.markdown-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.ai-markdown-content h1,
+.ai-markdown-content h2,
+.ai-markdown-content h3 {
+    margin: 12px 0 8px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.ai-markdown-content h1 { font-size: 18px; }
+.ai-markdown-content h2 { font-size: 16px; }
+.ai-markdown-content h3 { font-size: 14px; }
+
+.ai-markdown-content p {
+    margin: 8px 0;
+}
+
+.ai-markdown-content strong {
+    font-weight: 700;
+    color: #0c4a6e;
+}
+
+.ai-markdown-content em {
+    font-style: italic;
+}
+
+.ai-markdown-content del {
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+.ai-markdown-content ul,
+.ai-markdown-content ol {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.ai-markdown-content li {
+    margin: 4px 0;
+}
+
+.ai-markdown-content blockquote {
+    margin: 8px 0;
+    padding: 8px 12px;
+    border-left: 3px solid #667eea;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 13px;
+}
+
+.ai-markdown-content code {
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.ai-markdown-content pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 12px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    margin: 8px 0;
+}
+
+.ai-markdown-content pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+.ai-markdown-content a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.ai-markdown-content a:hover {
+    text-decoration: underline;
+}
+
+.ai-markdown-content hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 12px 0;
+}
+
+.ai-markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ai-markdown-content thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.ai-markdown-content th {
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+}
+
+.ai-markdown-content td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+.ai-markdown-content tbody tr:hover {
+    background: #f8fafc;
+}
+
+.ai-markdown-content tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.ai-markdown-content h1 { font-size: 18px; }
+.ai-markdown-content h2 { font-size: 16px; }
+.ai-markdown-content h3 { font-size: 14px; }
+
+.ai-markdown-content p {
+    margin: 8px 0;
+}
+
+.ai-markdown-content strong {
+    font-weight: 700;
+    color: #0c4a6e;
+}
+
+.ai-markdown-content em {
+    font-style: italic;
+}
+
+.ai-markdown-content del {
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+.ai-markdown-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.ai-markdown-content li {
+    margin: 4px 0;
+}
+
+.ai-markdown-content blockquote {
+    margin: 8px 0;
+    padding: 8px 12px;
+    border-left: 3px solid #667eea;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 13px;
+}
+
+.ai-markdown-content code {
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+.ai-markdown-content .inline-code {
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    color: #dc2626;
+}
+
+.ai-markdown-content .code-block {
+    display: block;
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 12px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    margin: 8px 0;
+}
+
+.ai-markdown-content .code-block code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+.ai-markdown-content a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.ai-markdown-content a:hover {
+    text-decoration: underline;
+}
+
+.ai-markdown-content hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 12px 0;
+}
+
+/* 按钮悬停效果 */
+#ai-summary-modal button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+#ai-summary-modal button:active {
+    transform: translateY(0);
+}
+
+/* 通用样式 */
+.ai-selector-hidden {
+    display: none !important;
+}
+
+.ai-selector-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* 流式输出光标动画 */
+@keyframes typingCursor {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+#streaming-content::after {
+    content: '|';
+    animation: typingCursor 1s infinite;
+    color: #0ea5e9;
+    font-weight: bold;
+}
+
+/* 思考过程动画 */
+@keyframes thinkingPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+#thinking-content {
+    animation: thinkingPulse 2s infinite;
+}
+
+/* 流式内容区域 */
+#streaming-content {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* 停止按钮悬停效果 */
+#ai-modal-stop:hover:not(:disabled) {
+    background: #dc2626 !important;
+    transform: translateY(-1px);
+}
+
+#ai-modal-stop:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+#ai-modal-stop:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

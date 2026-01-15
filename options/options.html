@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summary - 配置</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ 配置设置</h1>
+            <p class="subtitle">自定义 AI Summary 的行为</p>
+        </div>
+
+        <div class="config-section">
+            <!-- API 配置 -->
+            <div class="config-group">
+                <h2>API 配置</h2>
+                
+                <div class="input-group">
+                    <label for="api-endpoint">API Endpoint</label>
+                    <input type="text" id="api-endpoint" placeholder="https://api.openai.com/v1/chat/completions">
+                    <small>支持 OpenAI, DeepSeek, Moonshot 等兼容 API</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="api-key">API Key</label>
+                    <input type="password" id="api-key" placeholder="sk-...">
+                    <small>您的 API 密钥，不会上传到除 API 外的任何地方</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="model">Model</label>
+                    <input type="text" id="model" placeholder="gpt-3.5-turbo">
+                    <small>例如: gpt-3.5-turbo, gpt-4, deepseek-chat, moonshot-v1</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="system-prompt">System Prompt</label>
+                    <textarea id="system-prompt" placeholder="请总结以下内容的核心要点，简洁明了："></textarea>
+                </div>
+            </div>
+
+            <!-- 绕过模式 -->
+            <div class="config-group">
+                <h2>CORS 跨域绕过模式</h2>
+                
+                <div class="input-group">
+                    <label for="bypass-mode">绕过模式</label>
+                    <select id="bypass-mode">
+                        <option value="direct">直接模式 (可能受 CORS 限制)</option>
+                        <option value="proxy" selected>代理模式 (推荐，最可靠)</option>
+                        <option value="gm-bridge">GM Bridge (需要 Tampermonkey)</option>
+                    </select>
+                    <small>
+                        <strong>直接模式：</strong> 适用于支持 CORS 的 API<br>
+                        <strong>代理模式：</strong> 使用代理服务器绕过 CORS<br>
+                        <strong>GM Bridge：</strong> 使用 Greasemonkey API（不推荐）
+                    </small>
+                </div>
+
+                <div class="input-group" id="proxy-config">
+                    <label for="proxy-url">代理 URL</label>
+                    <input type="text" id="proxy-url" placeholder="https://your-proxy-server.com/">
+                    <small>
+                        推荐代理服务：<br>
+                        • 自建代理（最佳）<br>
+                        • Cloudflare Workers<br>
+                        • cors-anywhere（测试用）
+                    </small>
+                </div>
+            </div>
+
+            <!-- CORS 说明 -->
+            <div class="config-group" style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px;">
+                <h3 style="color: #856404; margin-top: 0;">⚠️ 关于 CORS 跨域问题</h3>
+                <p style="color: #856404; line-height: 1.6;">
+                    浏览器安全策略会阻止扩展直接访问不同域名的 API。<br>
+                    <strong>解决方案：</strong><br>
+                    1. <strong>使用代理模式（推荐）</strong> - 配置一个支持 CORS 的代理服务器<br>
+                    2. <strong>配置 API 服务器</strong> - 添加 <code>Access-Control-Allow-Origin: *</code><br>
+                    3. <strong>使用 API 网关</strong> - 如 Cloudflare Workers, AWS API Gateway
+                </p>
+            </div>
+
+            <!-- 行为设置 -->
+            <div class="config-group">
+                <h2>行为设置</h2>
+                
+                <div class="input-group">
+                    <label for="highlight-color">高亮颜色</label>
+                    <input type="color" id="highlight-color" value="#007bff">
+                    <small>选择元素时的高亮背景色</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="highlight-opacity">高亮透明度</label>
+                    <input type="range" id="highlight-opacity" min="0.1" max="1.0" step="0.1" value="0.6">
+                    <small>当前值: <span id="opacity-value">0.6</span> - 值越小越透明，越容易看到原内容</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="wait-time">SPA 等待时间 (ms)</label>
+                    <input type="number" id="wait-time" min="100" max="5000" step="100" value="500">
+                    <small>针对动态加载内容的等待时间</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="min-text-length">最小文本长度</label>
+                    <input type="number" id="min-text-length" min="1" max="50" step="1" value="5">
+                    <small>过滤短文本，减少噪音</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="max-recursion-depth">递归深度限制</label>
+                    <input type="number" id="max-recursion-depth" min="1" max="20" step="1" value="10">
+                    <small>防止无限递归，保护性能</small>
+                </div>
+            </div>
+
+            <!-- 功能开关 -->
+            <div class="config-group">
+                <h2>功能开关</h2>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="stream-enabled" checked>
+                    <label for="stream-enabled">启用流式输出</label>
+                    <small>
+                        实时显示 AI 生成过程，包含：<br>
+                        • 打字机效果<br>
+                        • 思考过程显示<br>
+                        • 实时滚动<br>
+                        • 停止按钮
+                    </small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="markdown-enabled" checked>
+                    <label for="markdown-enabled">启用 Markdown 渲染</label>
+                    <small>支持表格、代码块等格式</small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="detect-dynamic" checked>
+                    <label for="detect-dynamic">启用动态内容检测</label>
+                    <small>自动检测 SPA 和 Shadow DOM</small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="debug-mode">
+                    <label for="debug-mode">启用调试模式</label>
+                    <small>在控制台输出详细日志</small>
+                </div>
+            </div>
+
+            <!-- 超时设置 -->
+            <div class="config-group">
+                <h2>网络设置</h2>
+                
+                <div class="input-group">
+                    <label for="timeout">请求超时 (ms)</label>
+                    <input type="number" id="timeout" min="5000" max="120000" step="1000" value="30000">
+                    <small>API 请求超时时间</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="retry-count">重试次数</label>
+                    <input type="number" id="retry-count" min="0" max="3" step="1" value="0">
+                    <small>失败时的自动重试次数</small>
+                </div>
+            </div>
+
+            <!-- 快捷键设置 -->
+            <div class="config-group">
+                <h2>快捷键设置</h2>
+                
+                <div class="input-group">
+                    <label for="shortcut-toggle">切换选择模式</label>
+                    <input type="text" id="shortcut-toggle" placeholder="Ctrl+Shift+S" value="Ctrl+Shift+S" readonly>
+                    <small>当前: Ctrl+Shift+S (Mac: Command+Shift+S) - 可在浏览器扩展快捷键设置中修改</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="shortcut-config">打开配置页面</label>
+                    <input type="text" id="shortcut-config" placeholder="Ctrl+Shift+C" value="Ctrl+Shift+C" readonly>
+                    <small>当前: Ctrl+Shift+C (Mac: Command+Shift+C) - 可在浏览器扩展快捷键设置中修改</small>
+                </div>
+
+                <div class="info-box">
+                    <strong>💡 提示:</strong> 要自定义快捷键，请右键点击插件图标 → "管理扩展程序" → "键盘快捷键" → 找到本插件进行设置
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="save-config">💾 保存配置</button>
+                <button class="btn btn-secondary" id="test-api">🧪 测试 API</button>
+                <button class="btn btn-danger" id="reset-config">🔄 重置配置</button>
+            </div>
+
+            <!-- 测试结果 -->
+            <div class="test-result" id="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- 帮助信息 -->
+        <div class="help-section">
+            <h3>💡 使用说明</h3>
+            <ul>
+                <li><strong>API 配置:</strong> 支持 OpenAI, DeepSeek, Moonshot 等兼容 API</li>
+                <li><strong>CSP 绕过:</strong> 如果插件无法正常工作，请尝试切换绕过模式</li>
+                <li><strong>递归深度:</strong> 复杂页面建议设置 10-15，简单页面 5-8</li>
+                <li><strong>调试模式:</strong> 开启后可在控制台查看详细日志</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>
