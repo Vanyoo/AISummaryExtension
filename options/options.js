@@ -69,6 +69,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // 将 RGBA 格式转换为 Hex 格式（兼容 color input）
+    function rgbaToHex(color) {
+        if (!color) return '#007bff';
+        
+        // 如果已经是 Hex 格式，直接返回
+        if (color.startsWith('#')) {
+            return color;
+        }
+        
+        // 解析 RGBA 格式
+        const rgbaMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+        if (rgbaMatch) {
+            const r = parseInt(rgbaMatch[1]).toString(16).padStart(2, '0');
+            const g = parseInt(rgbaMatch[2]).toString(16).padStart(2, '0');
+            const b = parseInt(rgbaMatch[3]).toString(16).padStart(2, '0');
+            return `#${r}${g}${b}`;
+        }
+        
+        // 解析其他格式（如 rgb()）
+        const rgbMatch = color.match(/rgb?\((\d+),\s*(\d+),\s*(\d+)/i);
+        if (rgbMatch) {
+            const r = parseInt(rgbMatch[1]).toString(16).padStart(2, '0');
+            const g = parseInt(rgbMatch[2]).toString(16).padStart(2, '0');
+            const b = parseInt(rgbMatch[3]).toString(16).padStart(2, '0');
+            return `#${r}${g}${b}`;
+        }
+        
+        // 无法解析，返回默认值
+        return '#007bff';
+    }
+
     async function loadConfig() {
         chrome.storage.sync.get(['config'], (result) => {
             const config = result.config || {};
@@ -83,7 +114,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             elements.proxyUrl.value = config.proxyUrl || '';
             elements.proxyConfig.style.display = elements.bypassMode.value === 'proxy' ? 'block' : 'none';
             
-            elements.highlightColor.value = config.highlightColor || '#007bff';
+            // 将 RGBA 转换为 Hex 格式
+            elements.highlightColor.value = rgbaToHex(config.highlightColor);
             elements.highlightOpacity.value = config.highlightOpacity || 0.6;
             elements.opacityValue.textContent = config.highlightOpacity || 0.6;
             elements.waitTime.value = config.waitTime || 500;

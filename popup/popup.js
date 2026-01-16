@@ -83,6 +83,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 发送消息到内容脚本检查页面
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
+                // 检查是否是 chrome:// URL（不可访问的页面）
+                if (tabs[0].url && (tabs[0].url.startsWith('chrome://') || 
+                                     tabs[0].url.startsWith('chrome-extension://') ||
+                                     tabs[0].url.startsWith('edge://') ||
+                                     tabs[0].url.startsWith('about:'))) {
+                    pageSupport.innerHTML = '<span class="status-badge pending">不支持</span>';
+                    btnToggleSelect.disabled = true;
+                    btnToggleSelect.title = '此页面不支持扩展';
+                    return;
+                }
+
                 chrome.scripting.executeScript({
                     target: { tabId: tabs[0].id },
                     func: () => {
@@ -132,6 +143,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function getSelectionStatus() {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
+                // 检查是否是 chrome:// URL（不可访问的页面）
+                if (tabs[0].url && (tabs[0].url.startsWith('chrome://') || 
+                                     tabs[0].url.startsWith('chrome-extension://') ||
+                                     tabs[0].url.startsWith('edge://') ||
+                                     tabs[0].url.startsWith('about:'))) {
+                    return;
+                }
+
                 chrome.tabs.sendMessage(tabs[0].id, { action: 'getSelectionStatus' }, (response) => {
                     if (chrome.runtime.lastError) {
                         // 内容脚本未注入或页面不支持
@@ -149,6 +168,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     function toggleSelection() {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
+                // 检查是否是 chrome:// URL（不可访问的页面）
+                if (tabs[0].url && (tabs[0].url.startsWith('chrome://') || 
+                                     tabs[0].url.startsWith('chrome-extension://') ||
+                                     tabs[0].url.startsWith('edge://') ||
+                                     tabs[0].url.startsWith('about:'))) {
+                    showNotification('此页面不支持扩展功能', 'error');
+                    return;
+                }
+
                 // 确保内容脚本已注入
                 chrome.scripting.executeScript({
                     target: { tabId: tabs[0].id },

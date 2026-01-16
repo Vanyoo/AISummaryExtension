@@ -412,18 +412,25 @@ function waitForTextEnhanced(timeout = window.config.waitTime) {
 
 // ==================== UI 交互 ====================
 
-let isSelecting = false;
-let highlight = null;
-let toolbar = null;
-let fixedIndicator = null;
+// 防止重复声明的全局变量（使用 window 属性避免重复加载时的语法错误）
+if (typeof window.aiSelectorState === 'undefined') {
+    window.aiSelectorState = {
+        isSelecting: false,
+        highlight: null,
+        toolbar: null,
+        fixedIndicator: null,
+        modal: null
+    };
+}
 
 /**
  * 创建高亮框 - 改进版：支持透明度调整，能看到原内容
  */
 function createHighlight() {
-    if (highlight) return;
+    if (window.aiSelectorState.highlight) return;
     
-    highlight = document.createElement('div');
+    window.aiSelectorState.highlight = document.createElement('div');
+    const highlight = window.aiSelectorState.highlight;
     highlight.id = 'ai-selector-highlight';
     
     // 使用配置中的透明度，确保能看到原内容
@@ -462,9 +469,10 @@ function createHighlight() {
  * 创建工具栏
  */
 function createToolbar() {
-    if (toolbar) return;
+    if (window.aiSelectorState.toolbar) return;
 
-    toolbar = document.createElement('div');
+    window.aiSelectorState.toolbar = document.createElement('div');
+    const toolbar = window.aiSelectorState.toolbar;
     toolbar.id = 'ai-selector-toolbar';
     toolbar.style.cssText = `
         position: fixed; 
@@ -528,13 +536,13 @@ function createToolbar() {
         chrome.runtime.sendMessage({ action: 'openOptions' });
     });
     document.getElementById('ai-btn-close').addEventListener('click', () => {
-        toolbar.remove();
-        toolbar = null;
-        if (highlight) {
-            highlight.remove();
-            highlight = null;
+        window.aiSelectorState.toolbar.remove();
+        window.aiSelectorState.toolbar = null;
+        if (window.aiSelectorState.highlight) {
+            window.aiSelectorState.highlight.remove();
+            window.aiSelectorState.highlight = null;
         }
-        isSelecting = false;
+        window.aiSelectorState.isSelecting = false;
     });
 }
 
@@ -542,9 +550,9 @@ function createToolbar() {
  * 切换选择模式 - 改进版：直接进入选择，不显示浮窗
  */
 function toggleSelectMode() {
-    isSelecting = !isSelecting;
+    window.aiSelectorState.isSelecting = !window.aiSelectorState.isSelecting;
     
-    if (isSelecting) {
+    if (window.aiSelectorState.isSelecting) {
         document.body.style.cursor = 'crosshair';
         createHighlight();
         // 显示简化的状态指示器
@@ -552,10 +560,12 @@ function toggleSelectMode() {
         log('进入选择模式');
     } else {
         document.body.style.cursor = '';
-        if (highlight) highlight.style.opacity = '0';
-        if (fixedIndicator) {
-            fixedIndicator.remove();
-            fixedIndicator = null;
+        if (window.aiSelectorState.highlight) {
+            window.aiSelectorState.highlight.style.opacity = '0';
+        }
+        if (window.aiSelectorState.fixedIndicator) {
+            window.aiSelectorState.fixedIndicator.remove();
+            window.aiSelectorState.fixedIndicator = null;
         }
         hideQuickStatusIndicator();
         log('退出选择模式');
@@ -566,11 +576,12 @@ function toggleSelectMode() {
  * 显示快速状态指示器（替代浮窗）
  */
 function showQuickStatusIndicator(message) {
-    if (fixedIndicator) {
-        fixedIndicator.remove();
+    if (window.aiSelectorState.fixedIndicator) {
+        window.aiSelectorState.fixedIndicator.remove();
     }
     
-    fixedIndicator = document.createElement('div');
+    window.aiSelectorState.fixedIndicator = document.createElement('div');
+    const fixedIndicator = window.aiSelectorState.fixedIndicator;
     fixedIndicator.style.cssText = `
         position: fixed;
         top: 20px;
@@ -595,12 +606,12 @@ function showQuickStatusIndicator(message) {
  * 隐藏快速状态指示器
  */
 function hideQuickStatusIndicator() {
-    if (fixedIndicator && fixedIndicator.parentNode) {
-        fixedIndicator.style.animation = 'slideUp 0.3s ease';
+    if (window.aiSelectorState.fixedIndicator && window.aiSelectorState.fixedIndicator.parentNode) {
+        window.aiSelectorState.fixedIndicator.style.animation = 'slideUp 0.3s ease';
         setTimeout(() => {
-            if (fixedIndicator && fixedIndicator.parentNode) {
-                fixedIndicator.remove();
-                fixedIndicator = null;
+            if (window.aiSelectorState.fixedIndicator && window.aiSelectorState.fixedIndicator.parentNode) {
+                window.aiSelectorState.fixedIndicator.remove();
+                window.aiSelectorState.fixedIndicator = null;
             }
         }, 300);
     }
@@ -611,10 +622,11 @@ function hideQuickStatusIndicator() {
  */
 function showFixedIndicator(element, rect) {
     // 只在选择模式下显示
-    if (!isSelecting) return;
+    if (!window.aiSelectorState.isSelecting) return;
     
-    if (!fixedIndicator) {
-        fixedIndicator = document.createElement('div');
+    if (!window.aiSelectorState.fixedIndicator) {
+        window.aiSelectorState.fixedIndicator = document.createElement('div');
+        const fixedIndicator = window.aiSelectorState.fixedIndicator;
         fixedIndicator.style.cssText = `
             position: fixed;
             background: #10b981;
@@ -631,9 +643,9 @@ function showFixedIndicator(element, rect) {
         document.body.appendChild(fixedIndicator);
     }
     
-    fixedIndicator.textContent = '✓ 可点击';
-    fixedIndicator.style.left = `${rect.right - 60}px`;
-    fixedIndicator.style.top = `${rect.top + 4}px`;
+    window.aiSelectorState.fixedIndicator.textContent = '✓ 可点击';
+    window.aiSelectorState.fixedIndicator.style.left = `${rect.right - 60}px`;
+    window.aiSelectorState.fixedIndicator.style.top = `${rect.top + 4}px`;
 }
 
 /**
@@ -658,41 +670,43 @@ function checkForShadowChildren(element) {
 
 // 鼠标悬停 - 高亮和指示器
 document.addEventListener('mouseover', (e) => {
-    if (!isSelecting) return;
+    if (!window.aiSelectorState.isSelecting) return;
     if (e.target.closest('#ai-selector-toolbar')) return;
     
     const rect = e.target.getBoundingClientRect();
     
-    if (highlight) {
-        highlight.style.left = `${rect.left}px`;
-        highlight.style.top = `${rect.top}px`;
-        highlight.style.width = `${rect.width}px`;
-        highlight.style.height = `${rect.height}px`;
-        highlight.style.opacity = '1';
+    if (window.aiSelectorState.highlight) {
+        window.aiSelectorState.highlight.style.left = `${rect.left}px`;
+        window.aiSelectorState.highlight.style.top = `${rect.top}px`;
+        window.aiSelectorState.highlight.style.width = `${rect.width}px`;
+        window.aiSelectorState.highlight.style.height = `${rect.height}px`;
+        window.aiSelectorState.highlight.style.opacity = '1';
     }
 
     // 检测 Shadow DOM
     const hasShadow = e.target.shadowRoot || checkForShadowChildren(e.target);
     if (hasShadow) {
         showFixedIndicator(e.target, rect);
-    } else if (fixedIndicator) {
-        fixedIndicator.remove();
-        fixedIndicator = null;
+    } else if (window.aiSelectorState.fixedIndicator) {
+        window.aiSelectorState.fixedIndicator.remove();
+        window.aiSelectorState.fixedIndicator = null;
     }
 });
 
 // 鼠标移出
 document.addEventListener('mouseout', (e) => {
-    if (!isSelecting) return;
+    if (!window.aiSelectorState.isSelecting) return;
     if (e.target.closest('#ai-selector-toolbar')) return;
-    if (highlight) highlight.style.opacity = '0';
+    if (window.aiSelectorState.highlight) {
+        window.aiSelectorState.highlight.style.opacity = '0';
+    }
 });
 
 // 点击选择 - 改进版：选择后弹出 AI 总结窗口
 document.addEventListener('click', async (e) => {
-    if (!isSelecting) return;
+    if (!window.aiSelectorState.isSelecting) return;
     if (e.target.closest('#ai-selector-toolbar')) return;
-    if (e.target === highlight) return;
+    if (e.target === window.aiSelectorState.highlight) return;
     
     e.preventDefault();
     
@@ -1569,9 +1583,9 @@ document.addEventListener('keydown', (e) => {
             setTimeout(() => {
                 modal.remove();
             }, 200);
-        } 
+        }
         // 然后关闭选择模式
-        else if (isSelecting) {
+        else if (window.aiSelectorState.isSelecting) {
             toggleSelectMode();
         }
     }
@@ -1705,7 +1719,7 @@ document.head.appendChild(style);
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'toggleSelection') {
         // 直接切换选择模式，不创建浮窗
-        if (!isSelecting) {
+        if (!window.aiSelectorState.isSelecting) {
             toggleSelectMode();
         } else {
             toggleSelectMode();

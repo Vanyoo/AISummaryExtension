@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AI Summary",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AI智能网页内容总结工具 - 选择页面任意元素，一键生成AI总结并支持Markdown渲染",
   "permissions": [
     "activeTab",
@@ -15,6 +15,9 @@
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
   },
   "content_scripts": [
     {
